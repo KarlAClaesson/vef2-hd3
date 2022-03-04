@@ -2,10 +2,11 @@
   "name": "verkefni3.4",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "dotenv -e .env -- nodemon ./src/app.js"
+    "dev": "dotenv -e .env -- nodemon ./src/app.js",
+    "start": "dotenv -e .env node ./src/app.js"
   },
   "keywords": [],
   "author": "",

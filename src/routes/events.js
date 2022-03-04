@@ -9,7 +9,7 @@ import { listEvent, listEvents, listRegistered, register } from '../lib/db.js';
 async function indexRoute(req, res) {
     const events = await listEvents()
 
-    res.status().json('500', {
+    res.status(203).json({
         title: 'Viðburðasíðan',
         admin: false,
         events,
@@ -28,7 +28,7 @@ async function eventRoute(req, res, next) {
   
     const registered = await listRegistered(event.id);
   
-    return res.status().json('500', {
+    return res.status(203).json( {
       title: `${event.name} — Viðburðasíðan`,
       event,
       registered,
