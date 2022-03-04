@@ -33,6 +33,15 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) =>
+  res.json({
+    _links: {
+      users: '/users',
+      events: '/events',
+    },
+  })
+);
+
 app.use('/users', userRouter);
 app.use('/events', eventRouter);
 
