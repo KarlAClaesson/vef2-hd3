@@ -23,4 +23,4 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/users', userRouter);
 app.use('/events', eventRouter);
 
-app.listen(3000)
+app.listen(port);
