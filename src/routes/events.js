@@ -1,31 +1,61 @@
 import express from 'express';
+export const router = express.Router()
 export const eventRouter = express.Router()
+import { catchErrors } from '../lib/catch-errors.js';
 
 
-app.get('/', (req,res) =>{
-    res.json(posts)
-})
+import { listEvent, listEvents, listRegistered, register } from '../lib/db.js';
 
-app.post('/', (req,res) =>{
-    res.json(posts)
-})
+async function indexRoute(req, res) {
+    const events = await listEvents()
 
-app.get('/:id', (req,res) =>{
-    res.json(posts)
-})
+    res.status().json('500', {
+        title: 'Viðburðasíðan',
+        admin: false,
+        events,
+      });
+}
 
-app.patch('/:id', (req,res) =>{
-    res.json(posts)
-})
+async function eventRoute(req, res, next) {
+    const { id } = req.params;
+    console.log(id);
+    const event = await listEvent(id);
+    console.log(event);
+  
+    if (!event) {
+      return next();
+    }
+  
+    const registered = await listRegistered(event.id);
+  
+    return res.status().json('500', {
+      title: `${event.name} — Viðburðasíðan`,
+      event,
+      registered,
+      errors: [],
+      data: {},
+    });
+}
 
-app.delete('/:id', (req,res) =>{
-    res.json(posts)
-})
+/* async function registerRoute(req, res) {
+    const { name, comment } = req.body;
+    const { slug } = req.params;
+    const event = await listEvent(slug);
 
-app.post('/:id/register', (req,res) =>{
-    res.json(posts)
-})
+    const registered = await register({
+        name,
+        comment,
+        event: event.id,
+    });
 
-app.delete('/:id/register', (req,res) =>{
-    res.json(posts)
-})
+    if (registered) {
+        return res.redirect(`/${event.slug}`);
+    }
+
+    return res.send('error');
+} */
+
+
+eventRouter.get('/', catchErrors(indexRoute));
+eventRouter.get('/:id', catchErrors(eventRoute));
+/* eventRouter.post('/:id/register', catchErrors(registerRoute)); */

@@ -1,24 +1,29 @@
 import express from 'express';
 export const userRouter = express.Router()
+import { listUsers, getUser} from '../lib/db.js'
+import { catchErrors } from '../lib/catch-errors.js';
 
+async function userRoute(req, res) {
+    const users = await listUsers();
 
-router.get('/', (req,res) =>{
-    res.json({user: 'karl'})
-})
+    res.status().json('500', {
+        users
+    })
+}
 
-router.get('/:id', (req,res) =>{
-    res.json(posts)
-})
+async function userIdRoute(req, res) {
+    const { id } = req.params;
+    const user = await getUser(id);
 
-router.post('/register', (req,res) =>{
-    res.json(posts)
-})
+    res.status().json('500', {
+        user
+    })
+}
 
-router.post('/login', (req,res) =>{
-    res.json(posts)
-})
+async function userRegisterRoute(req, res) {
 
-router.get('/me', (req,res) =>{
-    res.json(posts)
-})
+}
 
+userRouter.get('/', catchErrors(userRoute));
+userRouter.get('/:id', catchErrors(userIdRoute));
+userRouter.post('/register', catchErrors(userRegisterRoute));
