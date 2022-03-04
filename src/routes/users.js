@@ -2,6 +2,14 @@ import express from 'express';
 export const userRouter = express.Router()
 import { listUsers, getUser} from '../lib/db.js'
 import { catchErrors } from '../lib/catch-errors.js';
+import { requireAdmin, requireAuthentication } from '../lib/passport.js';
+
+import {
+    passwordValidator,
+    usernameAndPasswordValidValidator,
+    usernameDoesNotExistValidator,
+    usernameValidator,
+  } from '../validation/validators.js';
 
 async function userRoute(req, res) {
     const users = await listUsers();
@@ -20,10 +28,14 @@ async function userIdRoute(req, res) {
     })
 }
 
-async function userRegisterRoute(req, res) {
+userRouter.post(
+    '/login',
+    usernameValidator,
+    passwordValidator,
+    usernameAndPasswordValidValidator,
+    validationCheck,
+    catchErrors(loginRoute)
+  );
 
-}
-
-userRouter.get('/', catchErrors(userRoute));
+userRouter.get('/', requireAuthentication, catchErrors(userRoute));
 userRouter.get('/:id', catchErrors(userIdRoute));
-userRouter.post('/register', catchErrors(userRegisterRoute));
